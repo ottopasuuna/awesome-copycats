@@ -79,7 +79,7 @@ awful.spawn.with_shell(
 
 -- {{{ Variable definitions
 
-local chosen_theme = "powerarrow"
+local chosen_theme = "ottopasuuna"
 local modkey       = "Mod4"
 local altkey       = "Mod1"
 local terminal     = "termite"
@@ -92,7 +92,7 @@ local browser      = os.getenv("BROWSER") or "firefox"
 local scrlocker    = "slock"
 
 awful.util.terminal = terminal
-awful.util.tagnames = { "1", "2", "3", "4", "5" }
+awful.util.tagnames = { "1", "2", "3", "4", "5", "6", "7", "8", "9" }
 awful.layout.layouts = {
     awful.layout.suit.tile,
     awful.layout.suit.tile.left,
@@ -399,7 +399,7 @@ globalkeys = my_table.join(
               {description = "delete tag", group = "tag"}),
 
     -- Standard program
-    awful.key({ modkey,           }, "Return", function () awful.spawn(terminal) end,
+    awful.key({ modkey,           }, "Return", function () awful.spawn.with_shell(terminal .. " -e /home/carl/bin/join_tmux.sh") end,
               {description = "open a terminal", group = "launcher"}),
     awful.key({ modkey, "Control" }, "r", awesome.restart,
               {description = "reload awesome", group = "awesome"}),
@@ -457,18 +457,21 @@ globalkeys = my_table.join(
         function ()
             os.execute(string.format("amixer -q set %s 1%%+", beautiful.volume.channel))
             beautiful.volume.update()
+            beautiful.volume.notify()
         end,
         {description = "volume up", group = "hotkeys"}),
     awful.key({}, "XF86AudioLowerVolume",
         function ()
             os.execute(string.format("amixer -q set %s 1%%-", beautiful.volume.channel))
             beautiful.volume.update()
+            beautiful.volume.notify()
         end,
         {description = "volume down", group = "hotkeys"}),
     awful.key({}, "XF86AudioMute",
         function ()
             os.execute(string.format("amixer -q set %s toggle", beautiful.volume.togglechannel or beautiful.volume.channel))
             beautiful.volume.update()
+            beautiful.volume.notify()
         end,
         {description = "toggle mute", group = "hotkeys"}),
 
