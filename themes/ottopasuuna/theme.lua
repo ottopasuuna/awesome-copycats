@@ -337,6 +337,21 @@ local function pl(widget, bgcolor, padding)
     return wibox.container.background(wibox.container.margin(widget, dpi(16), dpi(16)), bgcolor, theme.powerline_rl)
 end
 
+local function build_widget_arrows(colors_and_widgets)
+    full_widgets = {}
+    prev_color = theme.bg_normal
+    for i=1,#colors_and_widgets do
+        bg_color, widget = table.unpack(colors_and_widgets[i])
+        arrow_widget = arrow(prev_color, bg_color)
+        wgt_container = wibox.container.background(widget, bg_color)
+
+        table.insert(full_widgets, arrow_widget)
+        table.insert(full_widgets, wgt_container)
+        prev_color = bg_color
+    end
+    return full_widgets
+end
+
 function theme.at_screen_connect(s)
     -- Quake application
     s.quake = lain.util.quake({ app = awful.util.terminal })
@@ -386,42 +401,20 @@ function theme.at_screen_connect(s)
             layout = wibox.layout.fixed.horizontal,
             wibox.widget.systray(),
             wibox.container.margin(scissors, dpi(4), dpi(8)),
-            --[[ using shapes
-            pl(wibox.widget { mpdicon, theme.mpd.widget, layout = wibox.layout.align.horizontal }, "#343434"),
-            pl(task, "#343434"),
-            --pl(wibox.widget { mailicon, mail and theme.mail.widget, layout = wibox.layout.align.horizontal }, "#343434"),
-            pl(wibox.widget { memicon, mem.widget, layout = wibox.layout.align.horizontal }, "#777E76"),
-            pl(wibox.widget { cpuicon, cpu.widget, layout = wibox.layout.align.horizontal }, "#4B696D"),
-            pl(wibox.widget { tempicon, temp.widget, layout = wibox.layout.align.horizontal }, "#4B3B51"),
-            --pl(wibox.widget { fsicon, theme.fs and theme.fs.widget, layout = wibox.layout.align.horizontal }, "#CB755B"),
-            pl(wibox.widget { baticon, bat.widget, layout = wibox.layout.align.horizontal }, "#8DAA9A"),
-            pl(wibox.widget { neticon, net.widget, layout = wibox.layout.align.horizontal }, "#C0C0A2"),
-            pl(binclock.widget, "#777E76"),
-            --]]
-            -- using separators
-            arrow(theme.bg_normal, "#343434"),
-            wibox.container.background(wibox.container.margin(wibox.widget { mailicon, theme.mail and theme.mail.widget, layout = wibox.layout.align.horizontal }, dpi(4), dpi(7)), "#343434"),
-            arrow("#343434", theme.bg_normal),
-            wibox.container.background(wibox.container.margin(wibox.widget { mpdicon, theme.mpd.widget, layout = wibox.layout.align.horizontal }, dpi(3), dpi(6)), theme.bg_focus),
-            arrow(theme.bg_normal, "#343434"),
-            wibox.container.background(wibox.container.margin(task, dpi(3), dpi(7)), "#343434"),
-            arrow("#343434", "#777E76"),
-            wibox.container.background(wibox.container.margin(wibox.widget { memicon, mem.widget, layout = wibox.layout.align.horizontal }, dpi(2), dpi(3)), "#777E76"),
-            arrow("#777E76", "#4B696D"),
-            wibox.container.background(wibox.container.margin(wibox.widget { cpuicon, cpu.widget, layout = wibox.layout.align.horizontal }, dpi(3), dpi(4)), "#4B696D"),
-            arrow("#4B696D", "#4B3B51"),
-            wibox.container.background(wibox.container.margin(wibox.widget { tempicon, temp.widget, layout = wibox.layout.align.horizontal }, dpi(4), dpi(4)), "#4B3B51"),
-            arrow("#4B3B51", "#CB755B"),
-            wibox.container.background(wibox.container.margin(wibox.widget { fsicon, theme.fs and theme.fs.widget, layout = wibox.layout.align.horizontal }, dpi(3), dpi(3)), "#CB755B"),
-            arrow("#CB755B", "#8DAA9A"),
-            wibox.container.background(wibox.container.margin(wibox.widget { baticon, bat.widget, layout = wibox.layout.align.horizontal }, dpi(3), dpi(3)), "#8DAA9A"),
-            arrow("#8DAA9A", "#C0C0A2"),
-            wibox.container.background(wibox.container.margin(wibox.widget { nil, neticon, net.widget, layout = wibox.layout.align.horizontal }, dpi(3), dpi(3)), "#C0C0A2"),
-            arrow("#C0C0A2", "#777E76"),
-            wibox.container.background(wibox.container.margin(theme.textclock, dpi(4), dpi(8)), "#777E76"),
-            arrow("#777E76", "alpha"),
-            --]]
-            s.mylayoutbox,
+            -- using separator builder function
+            table.unpack(build_widget_arrows({
+                {'#343434', wibox.container.margin(wibox.widget { mailicon, theme.mail and theme.mail.widget, layout = wibox.layout.align.horizontal }, dpi(4), dpi(7))},
+                {theme.bg_normal, wibox.container.margin(wibox.widget { mpdicon, theme.mpd.widget, layout = wibox.layout.align.horizontal }, dpi(3), dpi(6))},
+                {'#343434', wibox.container.margin(task, dpi(3), dpi(7))},
+                {'#777E76', wibox.container.margin(wibox.widget { memicon, mem.widget, layout = wibox.layout.align.horizontal }, dpi(2), dpi(3))},
+                {'#4B696D', wibox.container.margin(wibox.widget { cpuicon, cpu.widget, layout = wibox.layout.align.horizontal }, dpi(3), dpi(4))},
+                {'#4B3B51', wibox.container.margin(wibox.widget { tempicon, temp.widget, layout = wibox.layout.align.horizontal }, dpi(4), dpi(4))},
+                {'#CB755B', wibox.container.margin(wibox.widget { fsicon, theme.fs and theme.fs.widget, layout = wibox.layout.align.horizontal }, dpi(3), dpi(3))},
+                {'#8DAA9A', wibox.container.margin(wibox.widget { baticon, bat.widget, layout = wibox.layout.align.horizontal }, dpi(3), dpi(3))},
+                {'#C0C0A2', wibox.container.margin(wibox.widget { nil, neticon, net.widget, layout = wibox.layout.align.horizontal }, dpi(3), dpi(3))},
+                {'#777E76', wibox.container.margin(theme.textclock, dpi(4), dpi(8))},
+                {'#111111', s.mylayoutbox}
+            })) -- /!\ unpack won't work if it's not the last element of the table, so don't add anything after this
         },
     }
 end
