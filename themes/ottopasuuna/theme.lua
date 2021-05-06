@@ -38,6 +38,8 @@ local theme                                     = {}
 theme.dir                                       = os.getenv("HOME") .. "/.config/awesome/themes/ottopasuuna"
 theme.wallpaper                                 = theme.dir .. "/wall.png"
 theme.font                                      = "Terminus 9"
+-- theme.hotkeys_font                              = "Terminus 9"
+-- theme.hotkeys_description_font                  = "Terminus 9"
 theme.fg_normal                                 = white
 -- theme.fg_focus                                  = "#32D6FF"
 theme.fg_focus                                  = cyan
@@ -139,7 +141,7 @@ theme.cal = lain.widget.cal({
     --cal = "cal --color=always",
     attach_to = { theme.textclock },
     notification_preset = {
-        font = "Terminus 10",
+        font = "mono 9",
         fg   = theme.fg_normal,
         bg   = theme.bg_normal
     }
@@ -230,7 +232,7 @@ local mem = lain.widget.mem({
 local cpuicon = wibox.widget.imagebox(theme.widget_cpu)
 local cpu = lain.widget.cpu({
     settings = function()
-        widget:set_markup(markup.font(theme.font, " " .. cpu_now.usage .. "% "))
+        widget:set_markup(markup.font(theme.font, string.format(" %3d%%", cpu_now.usage)))
     end
 })
 
@@ -246,6 +248,8 @@ end)
 --]]
 -- Coretemp (lain, average)
 local temp = lain.widget.temp({
+    tempfile = "/sys/devices/virtual/thermal/thermal_zone2/temp",
+    timeout = 2,
     settings = function()
         widget:set_markup(markup.font(theme.font, " " .. coretemp_now .. "°C "))
     end

@@ -58,9 +58,8 @@ local function run_once(cmd_arr)
 end
 
 local autorunApps = {
-    "cadence",
-    "nextcloud",
-    "ibus-daemon --xim -d"
+    "ibus-daemon --xim -d",
+    "dex -a"
 }
 
 run_once(autorunApps)
@@ -288,10 +287,10 @@ globalkeys = my_table.join(
               {description = "go back", group = "tag"}),
 
     -- Non-empty tag browsing
-    awful.key({ altkey }, "Left", function () lain.util.tag_view_nonempty(-1) end,
-              {description = "view  previous nonempty", group = "tag"}),
-    awful.key({ altkey }, "Right", function () lain.util.tag_view_nonempty(1) end,
-              {description = "view  previous nonempty", group = "tag"}),
+    -- awful.key({ altkey }, "Left", function () lain.util.tag_view_nonempty(-1) end,
+    --           {description = "view  previous nonempty", group = "tag"}),
+    -- awful.key({ altkey }, "Right", function () lain.util.tag_view_nonempty(1) end,
+    --           {description = "view  previous nonempty", group = "tag"}),
 
     -- Default client focus
     awful.key({ altkey,           }, "j",
@@ -476,25 +475,25 @@ globalkeys = my_table.join(
         {description = "toggle mute", group = "hotkeys"}),
 
     -- MPD control
-    awful.key({ altkey, "Control" }, "Up",
+    awful.key({}, "XF86AudioPlay",
         function ()
             os.execute("mpc toggle")
             beautiful.mpd.update()
         end,
         {description = "mpc toggle", group = "widgets"}),
-    awful.key({ altkey, "Control" }, "Down",
+    awful.key({}, "XF86AudioStop",
         function ()
             os.execute("mpc stop")
             beautiful.mpd.update()
         end,
         {description = "mpc stop", group = "widgets"}),
-    awful.key({ altkey, "Control" }, "Left",
+    awful.key({}, "XF86AudioPrev",
         function ()
             os.execute("mpc prev")
             beautiful.mpd.update()
         end,
         {description = "mpc prev", group = "widgets"}),
-    awful.key({ altkey, "Control" }, "Right",
+    awful.key({}, "XF86AudioNext",
         function ()
             os.execute("mpc next")
             beautiful.mpd.update()
@@ -517,6 +516,12 @@ globalkeys = my_table.join(
     -- User programs
     awful.key({ modkey }, "i", function () awful.spawn(browser) end,
               {description = "run browser", group = "launcher"}),
+
+    awful.key({ modkey , "Shift" }, "c", function () awful.spawn("catia") end,
+              {description = "launch catia", group = "launcher"}),
+
+    awful.key({ modkey }, "e", function () awful.spawn("thunderbird") end,
+              {description = "launch email", group = "launcher"}),
 
     -- Default
     --[[ Menubar
@@ -542,6 +547,8 @@ globalkeys = my_table.join(
     -- Prompt
     awful.key({ modkey }, "r", function () awful.screen.focused().mypromptbox:run() end,
               {description = "run prompt", group = "launcher"}),
+    -- awful.key({ modkey }, "r", function () awful.spawn("rofi -show drun") end,
+    --           {description = "run prompt", group = "launcher"}),
 
     awful.key({ modkey }, "x",
               function ()
@@ -552,14 +559,18 @@ globalkeys = my_table.join(
                     history_path = awful.util.get_cache_dir() .. "/history_eval"
                   }
               end,
-              {description = "lua execute prompt", group = "awesome"})
+              {description = "lua execute prompt", group = "awesome"}),
+
+    awful.key({ modkey }, "p", function() awful.spawn("passmenu") end,
+              {description = "passmenu", group = "launcher"}
+    )
     --]]
 )
 
 clientkeys = my_table.join(
     awful.key({ altkey, "Shift"   }, "m",      lain.util.magnify_client,
               {description = "magnify client", group = "client"}),
-    awful.key({ modkey,           }, "f",
+    awful.key({ modkey, "Shift"   }, "f",
         function (c)
             c.fullscreen = not c.fullscreen
             c:raise()
@@ -780,3 +791,5 @@ client.connect_signal("unfocus", function(c) c.border_color = beautiful.border_n
 -- possible workaround for tag preservation when switching back to default screen:
 -- https://github.com/lcpz/awesome-copycats/issues/251
 -- }}}
+
+-- vim: set foldmethod=marker:
