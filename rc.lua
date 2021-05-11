@@ -523,6 +523,17 @@ globalkeys = my_table.join(
     awful.key({ modkey }, "e", function () awful.spawn("thunderbird") end,
               {description = "launch email", group = "launcher"}),
 
+    awful.key({ modkey }, "f", function () awful.spawn(terminal .. " -e ranger") end,
+              {description = "launch email", group = "launcher"}),
+
+    awful.key({modkey  }, "y", function () awful.spawn(terminal .. " -e \"ytfzf -t\"", {floating = true,
+                                                                                        placement = awful.placement.centered}) end,
+              {description = "Launch youtube-fzf", group="launcher"}),
+
+    awful.key({modkey  }, "p", function () awful.spawn(terminal .. " -e \"fzflaunch pass\"", {floating = true,
+                                                                                        placement = awful.placement.centered}) end,
+              {description = "Password manager", group="launcher"}),
+
     -- Default
     --[[ Menubar
     awful.key({ modkey }, "p", function() menubar.show() end,
@@ -545,10 +556,11 @@ globalkeys = my_table.join(
         {description = "show rofi", group = "launcher"}),
     --]]
     -- Prompt
-    awful.key({ modkey }, "r", function () awful.screen.focused().mypromptbox:run() end,
-              {description = "run prompt", group = "launcher"}),
-    -- awful.key({ modkey }, "r", function () awful.spawn("rofi -show drun") end,
+    -- awful.key({ modkey }, "r", function () awful.screen.focused().mypromptbox:run() end,
     --           {description = "run prompt", group = "launcher"}),
+    awful.key({modkey  }, "r", function () awful.spawn(terminal .. " -e \"fzflaunch run\"", {floating = true,
+                                                                                             placement = awful.placement.centered}) end,
+              {description = "Application launcher", group="launcher"}),
 
     awful.key({ modkey }, "x",
               function ()
@@ -559,11 +571,8 @@ globalkeys = my_table.join(
                     history_path = awful.util.get_cache_dir() .. "/history_eval"
                   }
               end,
-              {description = "lua execute prompt", group = "awesome"}),
+              {description = "lua execute prompt", group = "awesome"})
 
-    awful.key({ modkey }, "p", function() awful.spawn("passmenu") end,
-              {description = "passmenu", group = "launcher"}
-    )
     --]]
 )
 
